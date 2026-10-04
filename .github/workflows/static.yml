@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Letter From Neetesh ❤️</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ff758c, #ffb3c6, #ffc3a0);
+  overflow-x: hidden;
+  text-align: center;
+  color: #7b163b;
+  padding: 15px;
+}
+
+.card {
+  width: 100%;
+  max-width: 430px;
+  padding: 30px 22px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 25px;
+  box-shadow: 0 12px 40px #9d31564a;
+  position: relative;
+  z-index: 2;
+}
+
+h1 { color: #e52e68; }
+
+p {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+input {
+  width: 90%;
+  padding: 14px;
+  border: 2px solid #ff9ab6;
+  border-radius: 25px;
+  font-size: 17px;
+  outline: none;
+  text-align: center;
+  margin: 12px 0;
+}
+
+button {
+  border: none;
+  border-radius: 30px;
+  padding: 13px 28px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px #00000020;
+}
+
+.primary {
+  color: white;
+  background: #ff3674;
+}
+
+#message {
+  color: #e52e68;
+  font-weight: bold;
+  min-height: 24px;
+}
+
+/* Envelope */
+.envelope {
+  position: relative;
+  width: 230px;
+  height: 155px;
+  margin: 35px auto;
+  background: #ff6b91;
+  border-radius: 5px;
+  cursor: pointer;
+  perspective: 800px;
+}
+
+.envelope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ff9ab6;
+  clip-path: polygon(0 0, 50% 55%, 100% 0);
+  z-index: 3;
+  transform-origin: top;
+  transition: transform 0.8s ease;
+}
+
+.envelope::after {
+  content: "❤️";
+  position: absolute;
+  top: 55px;
+  left: 95px;
+  font-size: 38px;
+  z-index: 4;
+  transition: opacity 0.3s;
+}
+
+.envelope.open::before {
+  transform: rotateX(180deg);
+  z-index: 0;
+}
+
+.envelope.open::after {
+  opacity: 0;
+}
+
+.letter {
+  position: absolute;
+  width: 85%;
+  height: 125px;
+  left: 7.5%;
+  top: 12px;
+  background: #fff8fa;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: bold;
+  color: #e52e68;
+  transition: transform 1s ease;
+  z-index: 2;
+}
+
+.envelope.open .letter {
+  transform: translateY(-105px);
+}
+
+#letterScreen, #loveScreen {
+  display: none;
+}
+
+.heart {
+  font-size: 65px;
+  animation: beat 1s infinite;
+}
+
+@keyframes beat {
+  50% { transform: scale(1.2); }
+}
+
+.question {
+  margin-top: 22px;
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 25px;
+  min-height: 55px;
+}
+
+#yes {
+  color: white;
+  background: #ff3674;
+}
+
+#no {
+  color: #e52e68;
+  background: #ffe1eb;
+}
+
+#result {
+  display: none;
+  margin-top: 22px;
+  color: #e52e68;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.floating {
+  position: fixed;
+  bottom: -40px;
+  font-size: 25px;
+  animation: floatUp 6s linear forwards;
+  opacity: 0.7;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO SCREEN -->
+<div class="card" id="introScreen">
+  <div class="heart">💌</div>
+  <h1>A Special Love Letter ❤️</h1>
+  <p>
+    This is a little love surprise from
+    <b>Neetesh</b> for his girlfriend. 🥹💕
+  </p>
+  <p>Before opening this special letter, please enter your name. 💗</p>
+
+  <input id="nameInput" type="text" placeholder="Enter your name..." />
+  <br>
+  <button class="primary" onclick="checkName()">Continue 💖</button>
+  <p id="message"></p>
+</div>
+
+<!-- ENVELOPE SCREEN -->
+<div class="card" id="letterScreen">
+  <div class="heart">🥹💗</div>
+  <h1 id="welcome"></h1>
+  <p id="envelopeText">
+    Someone has written a special letter just for you. 💌
+  </p>
+
+  <div class="envelope" id="envelope" onclick="openEnvelope()">
+    <div class="letter">For My Love 💕</div>
+  </div>
+
+  <p id="tapText">Tap the envelope to open your letter 💌</p>
+</div>
+
+<!-- LOVE MESSAGE SCREEN -->
+<div class="card" id="loveScreen">
+  <div class="heart">❤️</div>
+  <h1 id="loveTitle">My Love, My Everything 💕</h1>
+
+  <p>
+    My love, I don't know how to explain how much
+    you mean to me. 🥹❤️
+  </p>
+
+  <p>
+    You are the reason behind my smile, the peace
+    in my heart, and the most beautiful part of
+    my life. Every moment with you is special.
+  </p>
+
+  <p>
+    I may not be perfect, and sometimes I may make
+    mistakes, but one thing I promise is that my
+    love for you is real. I want to be with you
+    through your happiness, your sadness, your
+    success, and every little moment of life. 🫶
+  </p>
+
+  <p>
+    I don't need a perfect life. I just want a
+    beautiful life with you. I choose you today,
+    tomorrow, and every day. 💗
+  </p>
+
+  <div class="question">Do you love me? 🥺❤️</div>
+
+  <div class="buttons">
+    <button id="yes" onclick="sayYes()">YES 💖</button>
+    <button id="no">NO 🙈</button>
+  </div>
+
+  <div id="result">
+    Yaaaaay! 🥹💋❤️<br>
+    I love you so much, my princess! 💍💕
+    <br><span style="font-size:17px">
+      You're so special to me! 🫂
+    </span>
+  </div>
+</div>
+
+<script>
+let girlfriendName = "";
+
+function checkName() {
+  const name = document.getElementById("nameInput")
+    .value.trim().toLowerCase();
+  const message = document.getElementById("message");
+
+  if (!name) {
+    message.textContent = "Please enter your name first. 🥺";
+    return;
+  }
+
+  if (name === "sona") {
+    girlfriendName = "Sona";
+    showEnvelope();
+  } else if (name === "shaili") {
+    message.textContent =
+      "Oh, but what does he call you? Please enter your new name. 💕";
+    document.getElementById("nameInput").value = "";
+    document.getElementById("nameInput").placeholder =
+      "Enter the name he calls you...";
+    document.getElementById("nameInput").dataset.step = "nickname";
+  } else if (
+    document.getElementById("nameInput").dataset.step === "nickname"
+  ) {
+    if (name === "sona") {
+      girlfriendName = "Sona";
+      showEnvelope();
+    } else {
+      message.textContent =
+        "Hmm, that's not the special name. Try again, sweetheart. 💗";
+    }
+  } else {
+    message.textContent =
+      "This letter is for someone special. Try again! 💌";
+  }
+}
+
+function showEnvelope() {
+  document.getElementById("introScreen").style.display = "none";
+  document.getElementById("letterScreen").style.display = "block";
+  document.getElementById("welcome").textContent =
+    "Hey, " + girlfriendName + "! 🥹❤️";
+}
+
+function openEnvelope() {
+  const envelope = document.getElementById("envelope");
+  if (envelope.classList.contains("open")) return;
+
+  envelope.classList.add("open");
+  document.getElementById("tapText").textContent =
+    "Opening your special letter... 💕";
+
+  setTimeout(() => {
+    document.getElementById("letterScreen").style.display = "none";
+    document.getElementById("loveScreen").style.display = "block";
+    document.getElementById("loveTitle").textContent =
+      "My Love, " + girlfriendName + " 💕";
+
+    const no = document.getElementById("no");
+    no.addEventListener("pointerenter", moveNo);
+    no.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      moveNo();
+    }, { passive: false });
+    no.addEventListener("click", (e) => {
+      e.preventDefault();
+      moveNo();
+    });
+
+  }, 1500);
+}
+
+function moveNo() {
+  const no = document.getElementById("no");
+  const margin = 10;
+  const maxX = window.innerWidth - no.offsetWidth - margin;
+  const maxY = window.innerHeight - no.offsetHeight - margin;
+
+  no.style.position = "fixed";
+  no.style.left = Math.max(margin, Math.random() * maxX) + "px";
+  no.style.top = Math.max(margin, Math.random() * maxY) + "px";
+  no.style.zIndex = "10";
+}
+
+function sayYes() {
+  document.getElementById("result").style.display = "block";
+  document.getElementById("no").style.display = "none";
+  document.getElementById("yes").style.display = "none";
+  document.querySelector(".question").textContent =
+    "I knew you loved me! 🥹💗";
+
+  for (let i = 0; i < 25; i++) createHeart();
+}
+
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "floating";
+  heart.textContent = ["❤️","💕","💖","💗","💘"][
+    Math.floor(Math.random() * 5)
+  ];
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (3 + Math.random() * 4) + "s";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 7000);
+}
+
+setInterval(createHeart, 800);
+</script>
+
+</body>
+</html>
